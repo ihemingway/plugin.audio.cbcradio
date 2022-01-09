@@ -1,0 +1,490 @@
+{
+    "Data": {
+        "Radio One": {
+            "key": "1",
+            "networkID": 1,
+            "regionID": "ottawa",
+            "displayIndex": 1,
+            "liveTitle": "Radio One",
+            "liveRegion": "Ottawa",
+            "mediaType": "live",
+            "liveStreamID": "23",
+            "streams": [
+                {
+                    "id": 10,
+                    "title": "Regina",
+                    "province": "Saskatchewan",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_REG@118346/master.m3u8",
+                    "latitude": 50.45,
+                    "longitude": -104.616667,
+                    "callSign": "CBC_R1_REG",
+                    "programGuideLocationKey": "regina",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 11,
+                    "title": "Inuvik",
+                    "province": "Northwest Territories",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_INK@313092/master.m3u8",
+                    "latitude": 68.26666666667,
+                    "longitude": -133.66666666667,
+                    "callSign": "CBC_R1_INK",
+                    "programGuideLocationKey": "inuvik",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 12,
+                    "title": "Edmonton",
+                    "province": "Alberta",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_EDM@372985/master.m3u8",
+                    "latitude": 53.55,
+                    "longitude": -113.5,
+                    "callSign": "CBC_R1_EDM",
+                    "programGuideLocationKey": "edmonton",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 13,
+                    "title": "Calgary",
+                    "province": "Alberta",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_CGY@372026/master.m3u8",
+                    "latitude": 51.05,
+                    "longitude": -114.05,
+                    "callSign": "CBC_R1_CGY",
+                    "programGuideLocationKey": "calgary",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 14,
+                    "title": "Winnipeg",
+                    "province": "Manitoba",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_WPG@384111/master.m3u8",
+                    "latitude": 49.883333,
+                    "longitude": -97.166667,
+                    "callSign": "CBC_R1_WPG",
+                    "programGuideLocationKey": "winnipeg",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 15,
+                    "title": "Thunder Bay",
+                    "province": "Ontario",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_TBA@366707/master.m3u8",
+                    "latitude": 48.4,
+                    "longitude": -89.233333,
+                    "callSign": "CBC_R1_TBA",
+                    "programGuideLocationKey": "thunderbay",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 16,
+                    "title": "Quebec City",
+                    "province": "Quebec",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_QQU@366526/master.m3u8",
+                    "latitude": 46.81227911643,
+                    "longitude": -71.21453762054,
+                    "callSign": "CBC_R1_QQU",
+                    "programGuideLocationKey": "quebec_city",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 17,
+                    "title": "North Quebec",
+                    "province": "Quebec",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_ECB@317295/master.m3u8",
+                    "latitude": 45.512045,
+                    "longitude": -73.577174,
+                    "callSign": "CBC_R1_N_M",
+                    "programGuideLocationKey": "nord_quebec",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 18,
+                    "title": "Montreal",
+                    "province": "Quebec",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_MTL@360544/master.m3u8",
+                    "latitude": 45.516779223,
+                    "longitude": -73.649179482,
+                    "callSign": "CBC_R1_MTL",
+                    "programGuideLocationKey": "montreal",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 22,
+                    "title": "Saint John",
+                    "province": "New Brunswick",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_SNB@371252/master.m3u8",
+                    "latitude": 45.266667,
+                    "longitude": -66.066667,
+                    "callSign": "CBC_R1_SNB",
+                    "programGuideLocationKey": "saint_john",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 23,
+                    "title": "Ottawa",
+                    "province": "Ontario",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_OTT@348188/master.m3u8",
+                    "latitude": 45.416667,
+                    "longitude": -75.7,
+                    "callSign": "CBC_R1_OTT",
+                    "programGuideLocationKey": "ottawa",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 25,
+                    "title": "Charlottetown",
+                    "province": "PEI",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_CHR@360550/master.m3u8",
+                    "latitude": 46.235413,
+                    "longitude": -63.126519,
+                    "callSign": "CBC_R1_CHR",
+                    "programGuideLocationKey": "charlottetown",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 29,
+                    "title": "Halifax",
+                    "province": "Nova Scotia",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_HFX@353708/master.m3u8",
+                    "latitude": 44.65,
+                    "longitude": -63.6,
+                    "callSign": "CBC_R1_HFX",
+                    "programGuideLocationKey": "halifax",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 30,
+                    "title": "Grand Falls",
+                    "province": "Newfoundland And Labrador",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_GFA@360512/master.m3u8",
+                    "latitude": -55.6575,
+                    "longitude": 48.9277,
+                    "callSign": "CBC_R1_GFA",
+                    "programGuideLocationKey": "grand_falls_gander",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 1,
+                    "title": "Saskatoon",
+                    "province": "Saskatchewan",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_SSK@387344/master.m3u8",
+                    "latitude": 52.16666666667,
+                    "longitude": -106.63333333333,
+                    "callSign": "CBC_R1_SSK",
+                    "programGuideLocationKey": "saskatoon",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 8,
+                    "title": "Yellowknife",
+                    "province": "Northwest Territories",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_YKN@330427/master.m3u8",
+                    "latitude": 62.455995109,
+                    "longitude": -114.352546021,
+                    "callSign": "CBC_R1_YKN",
+                    "programGuideLocationKey": "yellow_knife",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 9,
+                    "title": "Vancouver",
+                    "province": "British Columbia",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_VCR@314572/master.m3u8",
+                    "latitude": 49.25,
+                    "longitude": -123.16666666667,
+                    "callSign": "CBC_R1_VCR",
+                    "programGuideLocationKey": "vancouver",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 2,
+                    "title": "Kitchener-Waterloo",
+                    "province": "Ontario",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_EKW@371992/master.m3u8",
+                    "latitude": 46.850079578,
+                    "longitude": -81.133054552,
+                    "callSign": "CBC_R1_EKW",
+                    "programGuideLocationKey": "kitchener_waterloo",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 6,
+                    "title": "Kelowna",
+                    "province": "British Columbia",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_KEL@386538/master.m3u8",
+                    "latitude": 49.83333333333,
+                    "longitude": -119.41666666667,
+                    "callSign": "CBC_R1_KEL",
+                    "programGuideLocationKey": "kelowna",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 7,
+                    "title": "Whitehorse",
+                    "province": "Yukon",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_WHS@66072/master.m3u8",
+                    "latitude": 60.71666666667,
+                    "longitude": -135.05,
+                    "callSign": "CBC_R1_WHS",
+                    "programGuideLocationKey": "whitehorse",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 3,
+                    "title": "Kamloops",
+                    "province": "British Columbia",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_KAM@384142/master.m3u8",
+                    "latitude": 50.66666666667,
+                    "longitude": -120.33333333333,
+                    "callSign": "CBC_R1_KAM",
+                    "programGuideLocationKey": "kamloops",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 4,
+                    "title": "Victoria",
+                    "province": "British Columbia",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_VIC@387331/master.m3u8",
+                    "latitude": 48.5,
+                    "longitude": -123.41666666667,
+                    "callSign": "CBC_R1_VIC",
+                    "programGuideLocationKey": "victoria",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 5,
+                    "title": "Prince George",
+                    "province": "British Columbia",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_PRG@347029/master.m3u8",
+                    "latitude": 53.91666666667,
+                    "longitude": -122.83333333333,
+                    "callSign": "CBC_R1_PRG",
+                    "programGuideLocationKey": "prince_george",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 31,
+                    "title": "Goose Bay",
+                    "province": "Newfoundland And Labrador",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_GBA@48512/master.m3u8",
+                    "latitude": 53.25,
+                    "longitude": -60.33333333333,
+                    "callSign": "CBC_R1_GBA",
+                    "programGuideLocationKey": "labrador",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 32,
+                    "title": "Fredericton",
+                    "province": "New Brunswick",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_FRD@134846/master.m3u8",
+                    "latitude": 45.95922,
+                    "longitude": -66.64034,
+                    "callSign": "CBC_R1_FRD",
+                    "programGuideLocationKey": "fredericton",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 42,
+                    "title": "Barrie",
+                    "province": "Ontario",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_ERI@508311/master.m3u8",
+                    "latitude": 44.389355,
+                    "longitude": -79.690331,
+                    "callSign": "CBC_R1_ERI",
+                    "programGuideLocationKey": "barrie",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 44,
+                    "title": "Peterborough",
+                    "province": "Ontario",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_ERI1@508339/master.m3u8",
+                    "latitude": 44.29627,
+                    "longitude": -78.320243,
+                    "callSign": "CBC_R1_ERI1",
+                    "programGuideLocationKey": "peterborough",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 43,
+                    "title": "Kingston",
+                    "province": "Ontario",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_EKI@106780/master.m3u8",
+                    "latitude": 44.229984,
+                    "longitude": -76.480529,
+                    "callSign": "CBC_R1_EKI",
+                    "programGuideLocationKey": "kingston",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 19,
+                    "title": "Iqaluit",
+                    "province": "Nunavut",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_IQA@110100/master.m3u8",
+                    "latitude": 63.73333333333,
+                    "longitude": -68.51666666667,
+                    "callSign": "CBC_R1_IQA",
+                    "programGuideLocationKey": "iqaluit",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 20,
+                    "title": "Windsor",
+                    "province": "Ontario",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_WDR@324611/master.m3u8",
+                    "latitude": 42.300083644,
+                    "longitude": -83.033333,
+                    "callSign": "CBC_R1_WDR",
+                    "programGuideLocationKey": "windsor",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 21,
+                    "title": "Sudbury",
+                    "province": "Ontario",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_SUD@384513/master.m3u8",
+                    "latitude": 46.551394,
+                    "longitude": -81.0355,
+                    "callSign": "CBC_R1_SUD",
+                    "programGuideLocationKey": "sudbury",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 26,
+                    "title": "Sydney",
+                    "province": "Nova Scotia",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_SYD@51412/master.m3u8",
+                    "latitude": 46.150135592,
+                    "longitude": -60.181751924,
+                    "callSign": "CBC_R1_SYD",
+                    "programGuideLocationKey": "cape_breton",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 27,
+                    "title": "St. John's",
+                    "province": "Newfoundland And Labrador",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_SNF@28674/master.m3u8",
+                    "latitude": 47.55,
+                    "longitude": -52.6666666667,
+                    "callSign": "CBC_R1_SNF",
+                    "programGuideLocationKey": "st_johns",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 28,
+                    "title": "Moncton",
+                    "province": "New Brunswick",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_MCT@360345/master.m3u8",
+                    "latitude": 46.083333,
+                    "longitude": -64.766667,
+                    "callSign": "CBC_R1_MCT",
+                    "programGuideLocationKey": "moncton",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 40,
+                    "title": "Corner Brook",
+                    "province": "Newfoundland And Labrador",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_COR@353666/master.m3u8",
+                    "latitude": 48.95,
+                    "longitude": -57.96666666667,
+                    "callSign": "CBC_R1_COR",
+                    "programGuideLocationKey": "corner_brook",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 41,
+                    "title": "Toronto",
+                    "province": "Ontario",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_TOR@118420/master.m3u8",
+                    "latitude": 43.65,
+                    "longitude": -79.33333333333,
+                    "callSign": "CBC_R1_TOR",
+                    "programGuideLocationKey": "toronto",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                },
+                {
+                    "id": 24,
+                    "title": "London",
+                    "province": "Ontario",
+                    "streamURL": "https://cbcliveradio-lh.akamaihd.net/i/CBCR1_LDN@48520/master.m3u8",
+                    "latitude": 42.98333333333,
+                    "longitude": -81.25,
+                    "callSign": "CBC_R1_LDN",
+                    "programGuideLocationKey": "london",
+                    "programGuideNetworkKey": "cbc_radio_one"
+                }
+            ]
+        },
+        "CBC Radio": {
+            "key": "2",
+            "networkID": 2,
+            "regionID": "toronto",
+            "displayIndex": 2,
+            "liveTitle": "CBC Music",
+            "liveRegion": "Eastern",
+            "mediaType": "live",
+            "liveStreamID": "37",
+            "streams": [
+                {
+                    "id": 37,
+                    "title": "Eastern",
+                    "province": "Ontario",
+                    "streamURL": "https://cbcliveradio2-lh.akamaihd.net/i/CBCR2_TOR@382863/master.m3u8",
+                    "latitude": 43.65,
+                    "longitude": -79.33333333333,
+                    "callSign": "CBC_R2_TOR",
+                    "programGuideLocationKey": "toronto",
+                    "programGuideNetworkKey": "cbc_radio_2"
+                },
+                {
+                    "id": 34,
+                    "title": "Central",
+                    "province": "Manitoba",
+                    "streamURL": "https://cbcliveradio2-lh.akamaihd.net/i/CBCR2_WPG@385274/master.m3u8",
+                    "latitude": 49.883333,
+                    "longitude": -97.166667,
+                    "callSign": "CBC_R2_WPG",
+                    "programGuideLocationKey": "winnipeg",
+                    "programGuideNetworkKey": "cbc_radio_2"
+                },
+                {
+                    "id": 35,
+                    "title": "Pacific",
+                    "province": "British Columbia",
+                    "streamURL": "https://cbcliveradio2-lh.akamaihd.net/i/CBCR2_VCR@353638/master.m3u8",
+                    "latitude": 49.25,
+                    "longitude": -123.16666666667,
+                    "callSign": "CBC_R2_VCR",
+                    "programGuideLocationKey": "vancouver",
+                    "programGuideNetworkKey": "cbc_radio_2"
+                },
+                {
+                    "id": 33,
+                    "title": "Mountain",
+                    "province": "Alberta",
+                    "streamURL": "https://cbcliveradio2-lh.akamaihd.net/i/CBCR2_EDM@48972/master.m3u8",
+                    "latitude": 53.55,
+                    "longitude": -113.5,
+                    "callSign": "CBC_R2_EDM",
+                    "programGuideLocationKey": "edmonton",
+                    "programGuideNetworkKey": "cbc_radio_2"
+                },
+                {
+                    "id": 39,
+                    "title": "Atlantic",
+                    "province": "Nova Scotia",
+                    "streamURL": "https://cbcliveradio2-lh.akamaihd.net/i/CBCR2_HFX@382379/master.m3u8",
+                    "latitude": 44.65,
+                    "longitude": -63.6,
+                    "callSign": "CBC_R2_HFX",
+                    "programGuideLocationKey": "halifax",
+                    "programGuideNetworkKey": "cbc_radio_2"
+                }
+            ]
+        }
+    }
+}
