@@ -1,12 +1,10 @@
 import os
 import sys
+import urlparse
 import urllib
-import urllib.parse as urlparse
-import xbmcaddon
 import xbmcgui
 import xbmcplugin
 import json
-from pathlib import Path
 
 base_url = sys.argv[0]
 addon_handle = int(sys.argv[1])
@@ -15,11 +13,10 @@ xbmcplugin.setContent(addon_handle, "audio")
 
 
 def build_url(query):
-    return base_url + "?" + urlparse.urlencode(query)
+    return base_url + "?" + urllib.urlencode(query)
 
 
 file_path = os.path.dirname(os.path.realpath(__file__))
-file = Path("resources/data/streaminfo.json")
 file = os.path.join(file_path, "resources", "data", "streaminfo.json")
 with open(file) as json_file:
     data = json.load(json_file)
@@ -35,7 +32,6 @@ def get_streams(station):
 
 def list_stations():
     stations = get_stations()
-    listings = []
     for station in stations:
         url = build_url({"mode": "folder", "foldername": station})
         li = xbmcgui.ListItem(station)
@@ -52,9 +48,13 @@ def list_streams(station):
         title = stream["title"]
         streamURL = stream["streamURL"]
         url = build_url(
-            {"mode": "stream", "url": streamURL, "title": f"{station} - {title}"}
+            {
+                "mode": "stream",
+                "url": streamURL,
+                "title": "{} - {}".format(station, title),
+            }
         )
-        li = xbmcgui.ListItem(f"{station} - {title}")
+        li = xbmcgui.ListItem("{} - {}".format(station, title))
         li.setProperty("IsPlayable", "true")
         li.setArt({"icon": "icon.png"})
         xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
