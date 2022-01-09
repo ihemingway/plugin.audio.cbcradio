@@ -6,6 +6,7 @@ import xbmcaddon
 import xbmcgui
 import xbmcplugin
 import json
+from pathlib import Path
 
 base_url = sys.argv[0]
 addon_handle = int(sys.argv[1])
@@ -17,16 +18,19 @@ def build_url(query):
     return base_url + "?" + urlparse.urlencode(query)
 
 
-with open("resources/data/streaminfo.json") as json_file:
+file_path = os.path.dirname(os.path.realpath(__file__))
+file = Path("resources/data/streaminfo.json")
+file = os.path.join(file_path, "resources", "data", "streaminfo.json")
+with open(file) as json_file:
     data = json.load(json_file)
 
 
 def get_stations():
-    return data.Data.keys()
+    return data["Data"].keys()
 
 
 def get_streams(station):
-    return data.Data[station]["streams"]
+    return data["Data"][station]["streams"]
 
 
 def list_stations():
