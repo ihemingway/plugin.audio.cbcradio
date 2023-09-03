@@ -4,9 +4,9 @@ import time
 import re
 import logging
 import os
-import tempfile
 from datetime import datetime
 from dataclasses import dataclass
+import xbmc
 
 
 API_URL = 'https://www.cbc.ca/listen/api/v1'
@@ -132,19 +132,19 @@ def get_current_program(program_schedule):
     for program in program_schedule:
         time_start = program['epochStart']
         time_end = program['epochEnd']
-        LOG.debug(f"title: {program['showTitle']}")
-        LOG.debug(f"now: {now}")
-        LOG.debug(f"time_start: {time_start}")
-        LOG.debug(f"time_end: {time_end}")
+        xbmc.log(level=xbmc.LOGDEBUG, msg=f"title: {program['showTitle']}")
+        xbmc.log(level=xbmc.LOGDEBUG, msg=f"now: {now}")
+        xbmc.log(level=xbmc.LOGDEBUG, msg=f"time_start: {time_start}")
+        xbmc.log(level=xbmc.LOGDEBUG, msg=f"time_end: {time_end}")
         if time_start < now:
-            LOG.debug("program started")
+            xbmc.log(level=xbmc.LOGDEBUG, msg="program started")
             started = True
         else:
             started = False
         if time_end > now:
             ended = False
         else:
-            LOG.debug("program ended")
+            xbmc.log(level=xbmc.LOGDEBUG, msg="program ended")
             ended = True
         if started and not ended:
             show = Program(program['showTitle'], program['showSlugTitle'], program['hostName'],
@@ -156,7 +156,7 @@ def get_playlog(program, location):
     now = datetime.now()
     playlog_url = f"https://www.cbc.ca/listen/api/v1/shows/{program.network_id}/{program.id}/playlogs/day/{now.strftime('%Y%m%d')}?withWebURL=true&locationKey={location}&xcountry=INT"
     playlog = get_json_api(playlog_url)['data']['tracks']
-    if playlog == []: LOG.debug("No playlog received from CBC.")
+    if playlog == []: xbmc.log(level=xbmc.LOGDEBUG, msg="No playlog received from CBC.")
     return playlog
 
 
@@ -164,14 +164,16 @@ def get_current_track(playlog):
     now = time.time() * 1000
     now_playing = None
     if playlog == []:
-        LOG.debug("Empty playlog.")
+        xbmc.log(level=xbmc.LOGDEBUG, msg="Empty playlog.")
         return Track(None, None, None)
     for item in playlog:
         time_started = item['broadcastedTime']
         if now > time_started:
             now_playing = item
-    track = Track(now_playing['title'], now_playing['artists'], now_playing['album'])
-    return track
+    try:
+        return Track(now_playing['title'], now_playing['artists'], now_playing['album'])
+    except TypeError:
+        return Track(None, None, None)
 
 
 def run(key, location):

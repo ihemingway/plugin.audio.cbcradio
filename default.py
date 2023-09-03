@@ -12,10 +12,9 @@ import xbmcplugin
 import xbmc
 import now_playing
 
-logging.basicConfig(level=os.environ.get("LOGLEVEL", "DEBUG"))
-LOG = logging.getLogger("plugin.audio.cbcradio")
-LOG.debug(str(sys.argv))
+xbmc.log(level=xbmc.LOGDEBUG, msg=str(sys.argv))
 
+MONITOR = xbmc.Monitor()
 BASE_URL = sys.argv[0]
 ADDON_HANDLE = int(sys.argv[1])
 
@@ -35,48 +34,13 @@ def set_icon():
 
 ICON = set_icon()
 
-#file_path = os.path.dirname(os.path.realpath(__file__))
-#file = Path("resources/data/streaminfo.json")
-#file = os.path.join(file_path, "resources", "data", "streaminfo.json")
-#with open(file) as json_file:
-#    data = json.load(json_file)
-
 xbmcplugin.setPluginFanart(ADDON_HANDLE, FANART)
 xbmcplugin.setContent(ADDON_HANDLE, "audio")
 
-'''
-def get_data():
-    formatted = {'Data': {}}
-    j = now_playing.get_json(URL)
-    stations = j['listenLiveHeroCarouselData']
-    for station in stations:
-        name = station['liveTitle']
-        formatted["Data"][name] = station
-    return formatted
-'''
-
-
-#STATIONS = now_playing.get_stations()
-#for key in STATIONS:
-#    LOG.debug(STATIONS[key])
 KEY = None
 
 def build_url(query):
     return BASE_URL + "?" + urlparse.urlencode(query)
-
-
-'''
-def get_stations():
-    return DATA["Data"].keys()
-
-
-def get_streams(station):
-    return DATA["Data"][station]["streams"]
-
-
-def get_key(station):
-    return int(DATA["Data"][station]["key"]) - 1
-'''
 
 
 def list_stations():
@@ -118,29 +82,34 @@ def create_play_item(track):
         'title': track.title
         }
     play_item = xbmcgui.ListItem()
-    LOG.debug(f"play_item.setInfo('music', {info_labels})")
+    xbmc.log(level=xbmc.LOGDEBUG, msg=f"play_item.setInfo('music', {info_labels})")
     play_item.setInfo('music', info_labels)
     return play_item
 
 
 def set_program_art(program):
+    #if xbmc.Player().isPlaying():
     player = xbmc.Player()
     play_item = player.getPlayingItem()
-    play_item.setArt({'fanart': program.artwork_url})
-    LOG.debug(f"Set 'fanart': {program.artwork_url} ")
+    if program is not None:
+        play_item.setArt({'fanart': program.artwork_url})
+        xbmc.log(level=xbmc.LOGDEBUG, msg=f"Set 'fanart': {program.artwork_url}")
+    else:
+        play_item.setArt({'fanart': None})
+        xbmc.log(level=xbmc.LOGDEBUG, msg=f"Set 'fanart': None")
     player.updateInfoTag(play_item)
 
 
 def news_break():
-    LOG.debug("News break.")
+    xbmc.log(level=xbmc.LOGDEBUG, msg="News break.")
     player = xbmc.Player()
     play_item = player.getPlayingItem()
-    play_item.setArt({'fanart': None})
-    LOG.debug("Set 'fanart': None")
+    play_item.setArt({'fanart': FANART})
+    xbmc.log(level=xbmc.LOGDEBUG, msg="Set 'fanart': FANART")
     tag = play_item.getMusicInfoTag()
     tag.setAlbum(None)
     tag.setArtist(None)
-    tag.setTitle("News")
+    tag.setTitle("CBC News")
     tag.setComment(None)
     player.updateInfoTag(play_item)
     xbmc.sleep(300000)
@@ -161,14 +130,15 @@ def play_stream(key, location, url):
     xbmcplugin.setResolvedUrl(ADDON_HANDLE, True, listitem=play_item)
     while not xbmc.Player().isPlaying():
         xbmc.sleep(1000)
-    set_program_art(program)
     while xbmc.getCondVisibility('Window.IsActive(BusyDialog)'):
         xbmc.sleep(1000)
-        LOG.debug("sleep for fullscreen")
+        xbmc.log(level=xbmc.LOGDEBUG, msg="sleep for fullscreen")
+    set_program_art(program)
+    #xbmc.executebuiltin('Action(Info)')
     xbmc.executebuiltin('Action(FullScreen)')
-    LOG.debug("fullscreen")
+    xbmc.log(level=xbmc.LOGDEBUG, msg="fullscreen")
     c = -1
-    while True:
+    while not MONITOR.abortRequested():
         now = time.time() * 1000
         time_now = datetime.now().strftime("%M")
         mins = int(time_now)
@@ -177,7 +147,7 @@ def play_stream(key, location, url):
         if c == 12 and playlog == []:
             try:
                 playlog = now_playing.get_playlog(program, location)
-            except:
+            except Exception:
                 pass
             finally:
                 c = 0
@@ -186,7 +156,7 @@ def play_stream(key, location, url):
                 program = now_playing.get_current_program(program_schedule)
                 playlog = now_playing.get_playlog(program, location)
                 set_program_art(program)
-            except:
+            except Exception:
                 pass
         if playlog != []:
             track = now_playing.get_current_track(playlog)
@@ -204,7 +174,7 @@ def play_stream(key, location, url):
                 play_item.setPath(player.getPlayingFile())
                 play_item.setInfo('music', {'album': track.album, 'artist': track.artist, 'title': track.title})
                 player.updateInfoTag(play_item)'''
-                LOG.debug("item updated")
+                xbmc.log(level=xbmc.LOGDEBUG, msg="item updated")
         elif program.time_end < now or c == -1:
             player = xbmc.Player()
             play_item = player.getPlayingItem()
@@ -218,7 +188,10 @@ def play_stream(key, location, url):
                 tag.setTitle(program.title)
                 tag.setComment(None)
                 player.updateInfoTag(play_item)
-        time.sleep(5)
+        MONITOR.waitForAbort(5)
+        if MONITOR.abortRequested():
+            set_program_art(None)
+            xbmc.Player().stop()
         c += 1
         if not xbmc.Player().isPlaying():
             sys.exit(0)
@@ -240,12 +213,7 @@ def main():
         key = int(args["key"][0])
         location = args["location"][0]
         play_stream(key, location, url)
-        #player = CBCPlayer(streamURL, key)
-        #player.play(item=player.file, listitem=player.play_item)
-        #while player.isPlaying():
-        #    player.poll()
-        #    if not player.isPlaying():
-        #        sys.exit(0)
+        sys.exit(0)
 
 
 if __name__ == "__main__":
