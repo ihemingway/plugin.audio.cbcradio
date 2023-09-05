@@ -12,8 +12,6 @@ import xbmc
 API_URL = 'https://www.cbc.ca/listen/api/v1'
 URL = 'https://www.cbc.ca/listen/live-radio'
 # tz = time.tzname[time.daylight]
-logging.basicConfig(level=os.environ.get("LOGLEVEL", "DEBUG"))
-LOG = logging.getLogger("plugin.audio.cbcradio")
 
 
 @dataclass
@@ -51,23 +49,6 @@ class Track:
     title: str
     artist: int
     album: str
-
-
-def get_json(url):
-    #  replace w/ https://www.cbc.ca/listen/api/v1/live-radio/getLiveRadioStations
-    response = urllib.request.urlopen(url)
-    content = response.read().decode('UTF-8')
-    content = content.split('\n')
-    for line in content:
-        if "window.__PRELOADED_STATE__" in line:
-            line = line.strip()
-            line = line.strip('window.__PRELOADED_STATE__ =')
-            line = line.strip()
-            a = line
-            z = re.sub(r'''\\"''', "'", a)
-            y = z.replace("\'", "")
-            z = y.replace("\\", "")
-            return json.loads(z)
 
 
 def get_json_api(url):
@@ -108,7 +89,6 @@ def get_streams(station):
                 s['programGuideLocationKey'],
                 s['programGuideNetworkKey'],
                 s['streamURL'],
-                #get_program_schedule(station['key'], s['programGuideLocationKey']),
                 station['networkID'],
                 s['id']
             )
@@ -132,19 +112,18 @@ def get_current_program(program_schedule):
     for program in program_schedule:
         time_start = program['epochStart']
         time_end = program['epochEnd']
-        xbmc.log(level=xbmc.LOGDEBUG, msg=f"title: {program['showTitle']}")
-        xbmc.log(level=xbmc.LOGDEBUG, msg=f"now: {now}")
-        xbmc.log(level=xbmc.LOGDEBUG, msg=f"time_start: {time_start}")
-        xbmc.log(level=xbmc.LOGDEBUG, msg=f"time_end: {time_end}")
+        xbmc.log(level=xbmc.LOGDEBUG, msg=f"plugin.audio.cbcradio: title: {program['showTitle']}")
+        xbmc.log(level=xbmc.LOGDEBUG, msg=f"plugin.audio.cbcradio: time_start: {time_start}")
+        xbmc.log(level=xbmc.LOGDEBUG, msg=f"plugin.audio.cbcradio: time_end: {time_end}")
         if time_start < now:
-            xbmc.log(level=xbmc.LOGDEBUG, msg="program started")
+            xbmc.log(level=xbmc.LOGDEBUG, msg="plugin.audio.cbcradio: program started")
             started = True
         else:
             started = False
         if time_end > now:
             ended = False
         else:
-            xbmc.log(level=xbmc.LOGDEBUG, msg="program ended")
+            xbmc.log(level=xbmc.LOGDEBUG, msg="plugin.audio.cbcradio: program ended")
             ended = True
         if started and not ended:
             show = Program(program['showTitle'], program['showSlugTitle'], program['hostName'],
@@ -156,7 +135,8 @@ def get_playlog(program, location):
     now = datetime.now()
     playlog_url = f"https://www.cbc.ca/listen/api/v1/shows/{program.network_id}/{program.id}/playlogs/day/{now.strftime('%Y%m%d')}?withWebURL=true&locationKey={location}&xcountry=INT"
     playlog = get_json_api(playlog_url)['data']['tracks']
-    if playlog == []: xbmc.log(level=xbmc.LOGDEBUG, msg="No playlog received from CBC.")
+    if playlog == []:
+        xbmc.log(level=xbmc.LOGDEBUG, msg="plugin.audio.cbcradio: No playlog received from CBC.")
     return playlog
 
 
@@ -164,7 +144,7 @@ def get_current_track(playlog):
     now = time.time() * 1000
     now_playing = None
     if playlog == []:
-        xbmc.log(level=xbmc.LOGDEBUG, msg="Empty playlog.")
+        xbmc.log(level=xbmc.LOGDEBUG, msg="plugin.audio.cbcradio: Empty playlog.")
         return Track(None, None, None)
     for item in playlog:
         time_started = item['broadcastedTime']

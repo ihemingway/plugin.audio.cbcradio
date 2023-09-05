@@ -1,11 +1,7 @@
 import os
 import sys
-#import json
 import time
-import logging
 import urllib.parse as urlparse
-#import urllib.request
-#from pathlib import Path
 from datetime import datetime
 import xbmcgui
 import xbmcplugin
@@ -82,7 +78,7 @@ def create_play_item(track):
         'title': track.title
         }
     play_item = xbmcgui.ListItem()
-    xbmc.log(level=xbmc.LOGDEBUG, msg=f"play_item.setInfo('music', {info_labels})")
+    xbmc.log(level=xbmc.LOGDEBUG, msg=f"plugin.audio.cbcradio: play_item.setInfo('music', {info_labels})")
     play_item.setInfo('music', info_labels)
     return play_item
 
@@ -93,26 +89,32 @@ def set_program_art(program):
     play_item = player.getPlayingItem()
     if program is not None:
         play_item.setArt({'fanart': program.artwork_url})
-        xbmc.log(level=xbmc.LOGDEBUG, msg=f"Set 'fanart': {program.artwork_url}")
+        xbmc.log(level=xbmc.LOGDEBUG, msg=f"plugin.audio.cbcradio: Set 'fanart': {program.artwork_url}")
     else:
         play_item.setArt({'fanart': None})
-        xbmc.log(level=xbmc.LOGDEBUG, msg=f"Set 'fanart': None")
+        xbmc.log(level=xbmc.LOGDEBUG, msg=f"plugin.audio.cbcradio: Set 'fanart': None")
     player.updateInfoTag(play_item)
 
 
 def news_break():
-    xbmc.log(level=xbmc.LOGDEBUG, msg="News break.")
+    xbmc.log(level=xbmc.LOGDEBUG, msg="plugin.audio.cbcradio: News break.")
     player = xbmc.Player()
     play_item = player.getPlayingItem()
     play_item.setArt({'fanart': FANART})
-    xbmc.log(level=xbmc.LOGDEBUG, msg="Set 'fanart': FANART")
+    xbmc.log(level=xbmc.LOGDEBUG, msg="plugin.audio.cbcradio: Set 'fanart': FANART")
     tag = play_item.getMusicInfoTag()
     tag.setAlbum(None)
     tag.setArtist(None)
     tag.setTitle("CBC News")
     tag.setComment(None)
     player.updateInfoTag(play_item)
-    xbmc.sleep(300000)
+
+
+def calc_minutes():
+    now = time.time() * 1000
+    time_now = datetime.now().strftime("%M")
+    mins = int(time_now)
+    return mins
 
 
 def play_stream(key, location, url):
@@ -132,25 +134,20 @@ def play_stream(key, location, url):
         xbmc.sleep(1000)
     while xbmc.getCondVisibility('Window.IsActive(BusyDialog)'):
         xbmc.sleep(1000)
-        xbmc.log(level=xbmc.LOGDEBUG, msg="sleep for fullscreen")
+        xbmc.log(level=xbmc.LOGDEBUG, msg="plugin.audio.cbcradio: sleep for fullscreen")
     set_program_art(program)
-    #xbmc.executebuiltin('Action(Info)')
     xbmc.executebuiltin('Action(FullScreen)')
-    xbmc.log(level=xbmc.LOGDEBUG, msg="fullscreen")
+    xbmc.log(level=xbmc.LOGDEBUG, msg="plugin.audio.cbcradio: fullscreen")
     c = -1
     while not MONITOR.abortRequested():
         now = time.time() * 1000
-        time_now = datetime.now().strftime("%M")
-        mins = int(time_now)
-        if mins == 0 and key == 2:
+        if calc_minutes() in [00, 1, 2, 3, 4, 5] and key == 2:
+        # cbc music has news breaks at the top of the hour
             news_break()
-        if c == 12 and playlog == []:
-            try:
-                playlog = now_playing.get_playlog(program, location)
-            except Exception:
-                pass
-            finally:
-                c = 0
+            while calc_minutes() in [00, 1, 2, 3, 4, 5]:
+                xbmc.sleep(30000)
+            now = time.time() * 1000
+            program.time_end = now - 10000  # make sure program gets changed
         if program.time_end < now:
             try:
                 program = now_playing.get_current_program(program_schedule)
@@ -158,9 +155,16 @@ def play_stream(key, location, url):
                 set_program_art(program)
             except Exception:
                 pass
-        if playlog != []:
+        if c == 12 and playlog == []:  # if there's no playlog, check every min
+            try:
+                playlog = now_playing.get_playlog(program, location)
+            except Exception:
+                pass
+            finally:
+                c = 0
+        if playlog != []:  # if there is a playlog, get which track should be playing
             track = now_playing.get_current_track(playlog)
-            if track != last_track:
+            if track != last_track:  # if it's a new track, update 'now playing'
                 last_track = track
                 player = xbmc.Player()
                 play_item = player.getPlayingItem()
@@ -174,12 +178,17 @@ def play_stream(key, location, url):
                 play_item.setPath(player.getPlayingFile())
                 play_item.setInfo('music', {'album': track.album, 'artist': track.artist, 'title': track.title})
                 player.updateInfoTag(play_item)'''
-                xbmc.log(level=xbmc.LOGDEBUG, msg="item updated")
-        elif program.time_end < now or c == -1:
+                xbmc.log(level=xbmc.LOGDEBUG, msg="plugin.audio.cbcradio: item updated")
+        elif program.time_end < now or c == -1:  # if program over or plugin just started
             player = xbmc.Player()
             play_item = player.getPlayingItem()
             tag = play_item.getMusicInfoTag()
             title = tag.getTitle()
+            # if there is no playlog, we're going to set the info displayed to
+            # the program name and host. this is mainly for CBC One as most of 
+            # the shows do not have playlogs. CBC Music, usually does, but
+            # they can take awhile to be posted. this will display the show/host
+            # until the playlog is available.
             if title == program.title:
                 pass
             else:
