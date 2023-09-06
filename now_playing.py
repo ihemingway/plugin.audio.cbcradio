@@ -1,16 +1,12 @@
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
 import json
 import time
-import re
-import logging
-import os
 from datetime import datetime
 from dataclasses import dataclass
 import xbmc
 
 
 API_URL = 'https://www.cbc.ca/listen/api/v1'
-URL = 'https://www.cbc.ca/listen/live-radio'
 # tz = time.tzname[time.daylight]
 
 

@@ -10,30 +10,20 @@ import now_playing
 
 xbmc.log(level=xbmc.LOGDEBUG, msg=str(sys.argv))
 
+def set_file_constant(file):
+    file_path = os.path.dirname(os.path.realpath(__file__))
+    file = os.path.join(file_path, "resources", file)
+    return file
+
+
 MONITOR = xbmc.Monitor()
 BASE_URL = sys.argv[0]
 ADDON_HANDLE = int(sys.argv[1])
-
-def set_fanart():
-    file_path = os.path.dirname(os.path.realpath(__file__))
-    file = os.path.join(file_path, "resources", "fanart.jpg")
-    return file
-
-
-FANART = set_fanart()
-
-def set_icon():
-    file_path = os.path.dirname(os.path.realpath(__file__))
-    file = os.path.join(file_path, "resources", "icon.jpg")
-    return file
-
-
-ICON = set_icon()
+FANART = set_file_constant("fanart.jpg")
+ICON = set_file_constant("icon.jpg")
 
 xbmcplugin.setPluginFanart(ADDON_HANDLE, FANART)
 xbmcplugin.setContent(ADDON_HANDLE, "audio")
-
-KEY = None
 
 def build_url(query):
     return BASE_URL + "?" + urlparse.urlencode(query)
@@ -62,7 +52,7 @@ def list_streams(stn):
                 "title": station_and_title,
                 "key": station.key,
                 "location": stream.location
-             }
+            }
         )
         li = xbmcgui.ListItem(station_and_title)
         li.setProperty("IsPlayable", "true")
@@ -91,8 +81,8 @@ def set_program_art(program):
         play_item.setArt({'fanart': program.artwork_url})
         xbmc.log(level=xbmc.LOGDEBUG, msg=f"plugin.audio.cbcradio: Set 'fanart': {program.artwork_url}")
     else:
-        play_item.setArt({'fanart': None})
-        xbmc.log(level=xbmc.LOGDEBUG, msg=f"plugin.audio.cbcradio: Set 'fanart': None")
+        play_item.setArt({'fanart': FANART})
+        xbmc.log(level=xbmc.LOGDEBUG, msg=f"plugin.audio.cbcradio: Set 'fanart': FANART")
     player.updateInfoTag(play_item)
 
 
@@ -111,13 +101,12 @@ def news_break():
 
 
 def calc_minutes():
-    now = time.time() * 1000
     time_now = datetime.now().strftime("%M")
     mins = int(time_now)
     return mins
 
 
-def play_stream(key, location, url):
+def initialize(key, location, url):
     program_schedule = now_playing.get_program_schedule(key, location)
     program = now_playing.get_current_program(program_schedule)
     playlog = now_playing.get_playlog(program, location)
@@ -138,14 +127,19 @@ def play_stream(key, location, url):
     set_program_art(program)
     xbmc.executebuiltin('Action(FullScreen)')
     xbmc.log(level=xbmc.LOGDEBUG, msg="plugin.audio.cbcradio: fullscreen")
+    return program_schedule, program, playlog, last_track, play_item
+
+
+def play_stream(key, location, url):
+    program_schedule, program, playlog, last_track, play_item = initialize(key, location, url)
     c = -1
     while not MONITOR.abortRequested():
         now = time.time() * 1000
         if calc_minutes() in [00, 1, 2, 3, 4, 5] and key == 2:
-        # cbc music has news breaks at the top of the hour
+        # cbc music has 5 min news breaks at the top of the hour
             news_break()
             while calc_minutes() in [00, 1, 2, 3, 4, 5]:
-                xbmc.sleep(30000)
+                xbmc.sleep(10000)
             now = time.time() * 1000
             program.time_end = now - 10000  # make sure program gets changed
         if program.time_end < now:
@@ -178,14 +172,14 @@ def play_stream(key, location, url):
                 play_item.setPath(player.getPlayingFile())
                 play_item.setInfo('music', {'album': track.album, 'artist': track.artist, 'title': track.title})
                 player.updateInfoTag(play_item)'''
-                xbmc.log(level=xbmc.LOGDEBUG, msg="plugin.audio.cbcradio: item updated")
+                xbmc.log(level=xbmc.LOGDEBUG, msg="plugin.audio.cbcradio: track updated")
         elif program.time_end < now or c == -1:  # if program over or plugin just started
             player = xbmc.Player()
             play_item = player.getPlayingItem()
             tag = play_item.getMusicInfoTag()
             title = tag.getTitle()
             # if there is no playlog, we're going to set the info displayed to
-            # the program name and host. this is mainly for CBC One as most of 
+            # the program name and host. this is mainly for CBC One as most of
             # the shows do not have playlogs. CBC Music, usually does, but
             # they can take awhile to be posted. this will display the show/host
             # until the playlog is available.
