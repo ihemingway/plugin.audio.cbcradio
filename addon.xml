@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.audio.cbcradio" name="CBC Radio" version="2.0.2" provider-name="ihemingway">
+<addon id="plugin.audio.cbcradio" name="CBC Radio" version="2.0.3" provider-name="ihemingway">
     <requires>
         <import addon="xbmc.python" version="3.0.0" />
     </requires>
@@ -7,9 +7,9 @@
         <provides>audio</provides>
     </extension>
     <extension point="xbmc.addon.metadata">
-        <summary lang="en">CBC Radio</summary>
+        <summary lang="en_GB">CBC Radio</summary>
         <license>GNU General Public License, v2</license>
-        <description lang="en">Add-on for streaming CBC Radio and CBC Radio 2 stations.</description>
+        <description lang="en_GB">Add-on for streaming CBC Radio and CBC Radio 2 stations.</description>
         <platform>all</platform>
         <source>https://github.com/ihemingway/plugin.audio.cbcradio</source>
         <assets>
