@@ -12,8 +12,7 @@ xbmc.log(level=xbmc.LOGDEBUG, msg=str(sys.argv))
 
 def set_file_constant(file):
     file_path = os.path.dirname(os.path.realpath(__file__))
-    file = os.path.join(file_path, "resources", file)
-    return file
+    return os.path.join(file_path, "resources", file)
 
 
 MONITOR = xbmc.Monitor()
@@ -34,7 +33,7 @@ def list_stations():
     for station in stations:
         url = build_url({"mode": "folder", "foldername": station})
         li = xbmcgui.ListItem(station)
-        li.setArt({"icon": "DefaultFolder.png", "fanart": FANART})
+        li.setArt({"icon": ICON, "fanart": FANART})
         xbmcplugin.addDirectoryItem(
             handle=ADDON_HANDLE, url=url, listitem=li, isFolder=True
         )
@@ -74,12 +73,15 @@ def create_play_item(track):
 
 
 def set_program_art(program):
-    #if xbmc.Player().isPlaying():
     player = xbmc.Player()
     play_item = player.getPlayingItem()
     if program is not None:
-        play_item.setArt({'fanart': program.artwork_url})
-        xbmc.log(level=xbmc.LOGDEBUG, msg=f"plugin.audio.cbcradio: Set 'fanart': {program.artwork_url}")
+        try:
+            play_item.setArt({'fanart': program.artwork_url})
+            xbmc.log(level=xbmc.LOGDEBUG, msg=f"plugin.audio.cbcradio: Set 'fanart': {program.artwork_url}")
+        except Exception:
+            xbmc.log(level=xbmc.LOGDEBUG, msg=f"plugin.audio.cbcradio: Could not fetch fanart: {program.artwork_url} Using default.")
+            play_item.setArt({'fanart': FANART})
     else:
         play_item.setArt({'fanart': FANART})
         xbmc.log(level=xbmc.LOGDEBUG, msg=f"plugin.audio.cbcradio: Set 'fanart': FANART")
@@ -141,7 +143,7 @@ def play_stream(key, location, url):
             while calc_minutes() in [00, 1, 2, 3, 4, 5]:
                 xbmc.sleep(10000)
             now = time.time() * 1000
-            program.time_end = now - 10000  # make sure program gets changed
+            program.time_end = now - 10000  # make sure program gets changed after news
         if program.time_end < now:
             try:
                 program = now_playing.get_current_program(program_schedule)
@@ -149,14 +151,14 @@ def play_stream(key, location, url):
                 set_program_art(program)
             except Exception:
                 pass
-        if c == 12 and playlog == []:  # if there's no playlog, check every min
+        if c == 12 and not playlog:  # if there's no playlog, check every min
             try:
                 playlog = now_playing.get_playlog(program, location)
             except Exception:
                 pass
             finally:
                 c = 0
-        if playlog != []:  # if there is a playlog, get which track should be playing
+        if playlog:  # if there is a playlog, get which track should be playing
             track = now_playing.get_current_track(playlog)
             if track != last_track:  # if it's a new track, update 'now playing'
                 last_track = track
@@ -168,6 +170,9 @@ def play_stream(key, location, url):
                 tag.setTitle(track.title)
                 tag.setComment(f"{program.title} with {program.host}")
                 player.updateInfoTag(play_item)
+                # could not get this to work for v19
+                # if someone knows how to update currently playing
+                # this could be added to the matrix repo as well
                 '''play_item = xbmcgui.ListItem()
                 play_item.setPath(player.getPlayingFile())
                 play_item.setInfo('music', {'album': track.album, 'artist': track.artist, 'title': track.title})
