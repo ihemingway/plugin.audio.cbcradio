@@ -19,7 +19,8 @@ MONITOR = xbmc.Monitor()
 BASE_URL = sys.argv[0]
 ADDON_HANDLE = int(sys.argv[1])
 FANART = set_file_constant("fanart.jpg")
-ICON = set_file_constant("icon.jpg")
+ICON = set_file_constant("icon.png")
+PLAYER = xbmc.Player()
 
 xbmcplugin.setPluginFanart(ADDON_HANDLE, FANART)
 xbmcplugin.setContent(ADDON_HANDLE, "audio")
@@ -73,8 +74,7 @@ def create_play_item(track):
 
 
 def set_program_art(program):
-    player = xbmc.Player()
-    play_item = player.getPlayingItem()
+    play_item = PLAYER.getPlayingItem()
     if program is not None:
         try:
             play_item.setArt({'fanart': program.artwork_url})
@@ -85,13 +85,12 @@ def set_program_art(program):
     else:
         play_item.setArt({'fanart': FANART})
         xbmc.log(level=xbmc.LOGDEBUG, msg=f"plugin.audio.cbcradio: Set 'fanart': FANART")
-    player.updateInfoTag(play_item)
+    PLAYER.updateInfoTag(play_item)
 
 
 def news_break():
     xbmc.log(level=xbmc.LOGDEBUG, msg="plugin.audio.cbcradio: News break.")
-    player = xbmc.Player()
-    play_item = player.getPlayingItem()
+    play_item = PLAYER.getPlayingItem()
     play_item.setArt({'fanart': FANART})
     xbmc.log(level=xbmc.LOGDEBUG, msg="plugin.audio.cbcradio: Set 'fanart': FANART")
     tag = play_item.getMusicInfoTag()
@@ -99,7 +98,7 @@ def news_break():
     tag.setArtist(None)
     tag.setTitle("CBC News")
     tag.setComment(None)
-    player.updateInfoTag(play_item)
+    PLAYER.updateInfoTag(play_item)
 
 
 def calc_minutes():
@@ -117,11 +116,11 @@ def initialize(key, location, url):
     play_item.setPath(url)
     play_item.setProperty('IsPlayable', 'true')
     play_item.addStreamInfo('audio', {'codec': 'aac', 'channels': 2})
-    if xbmc.Player().isPlaying():
-        xbmc.Player().stop()
+    if PLAYER.isPlaying():
+        PLAYER.stop()
         xbmc.sleep(1000)
     xbmcplugin.setResolvedUrl(ADDON_HANDLE, True, listitem=play_item)
-    while not xbmc.Player().isPlaying():
+    while not PLAYER.isPlaying():
         xbmc.sleep(1000)
     while xbmc.getCondVisibility('Window.IsActive(BusyDialog)'):
         xbmc.sleep(1000)
@@ -144,6 +143,7 @@ def play_stream(key, location, url):
                 xbmc.sleep(10000)
             now = time.time() * 1000
             program.time_end = now - 10000  # make sure program gets changed after news
+            c = -1  # make sure program gets updated if no playlog
         if program.time_end < now:
             try:
                 program = now_playing.get_current_program(program_schedule)
@@ -162,25 +162,23 @@ def play_stream(key, location, url):
             track = now_playing.get_current_track(playlog)
             if track != last_track:  # if it's a new track, update 'now playing'
                 last_track = track
-                player = xbmc.Player()
-                play_item = player.getPlayingItem()
+                play_item = PLAYER.getPlayingItem()
                 tag = play_item.getMusicInfoTag()
                 tag.setAlbum(track.album)
                 tag.setArtist(track.artist)
                 tag.setTitle(track.title)
                 tag.setComment(f"{program.title} with {program.host}")
-                player.updateInfoTag(play_item)
+                PLAYER.updateInfoTag(play_item)
                 # could not get this to work for v19
                 # if someone knows how to update currently playing
                 # this could be added to the matrix repo as well
                 '''play_item = xbmcgui.ListItem()
-                play_item.setPath(player.getPlayingFile())
+                play_item.setPath(PLAYER.getPlayingFile())
                 play_item.setInfo('music', {'album': track.album, 'artist': track.artist, 'title': track.title})
-                player.updateInfoTag(play_item)'''
+                PLAYER.updateInfoTag(play_item)'''
                 xbmc.log(level=xbmc.LOGDEBUG, msg="plugin.audio.cbcradio: track updated")
         elif program.time_end < now or c == -1:  # if program over or plugin just started
-            player = xbmc.Player()
-            play_item = player.getPlayingItem()
+            play_item = PLAYER.getPlayingItem()
             tag = play_item.getMusicInfoTag()
             title = tag.getTitle()
             # if there is no playlog, we're going to set the info displayed to
@@ -195,13 +193,13 @@ def play_stream(key, location, url):
                 tag.setArtist(program.host)
                 tag.setTitle(program.title)
                 tag.setComment(None)
-                player.updateInfoTag(play_item)
+                PLAYER.updateInfoTag(play_item)
         MONITOR.waitForAbort(5)
         if MONITOR.abortRequested():
             set_program_art(None)
-            xbmc.Player().stop()
+            PLAYER.stop()
         c += 1
-        if not xbmc.Player().isPlaying():
+        if not PLAYER.isPlaying():
             sys.exit(0)
 
 
