@@ -9,7 +9,7 @@
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">CBC Radio</summary>
         <license>GNU General Public License, v2</license>
-        <description lang="en_GB">Add-on for streaming CBC Radio and CBC Radio 2 stations.</description>
+        <description lang="en_GB">Add-on for streaming CBC Radio One and CBC Music live stations.</description>
         <platform>all</platform>
         <source>https://github.com/ihemingway/plugin.audio.cbcradio</source>
         <assets>
