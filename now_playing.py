@@ -1,9 +1,18 @@
 import urllib.request
 import json
 import time
+import os
+import sys
 from datetime import datetime
 from dataclasses import dataclass
 import xbmc
+
+DISCOGS_TOKEN = ""
+
+file_path = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(os.path.join(file_path, "lib"))
+
+import discogs_client
 
 
 API_URL = 'https://www.cbc.ca/listen/api/v1'
@@ -43,6 +52,7 @@ class Track:
     title: str
     artist: int
     album: str
+    cover_url: str
 
 
 def get_json_api(url):
@@ -153,9 +163,27 @@ def get_current_track(playlog):
         if now > time_started:
             now_playing = item
     try:
-        return Track(now_playing['title'], now_playing['artists'], now_playing['album'])
+        return Track(
+            now_playing['title'],
+            now_playing['artists'],
+            now_playing['album'],
+            get_album_cover(now_playing['artists'], now_playing['album'])
+            )
     except TypeError:
-        return Track(None, None, None)
+        return Track(None, None, None, None)
+    
+
+def get_album_cover(artist, album):
+    d = discogs_client.Client('plugin.audio.cbcradio/2.05', user_token=DISCOGS_TOKEN)
+    # search album/artist first. if we get a match, highly likely to be correct
+    results = d.search(album, artist=artist, type='release')
+    if results.count != 0:
+        return results[0].images[0]['uri']
+    # try searching album only if no result from album/artist
+    #results = d.search(album, type='release')
+    #if results.count != 0:
+    #    return results[0].images[0]['uri']
+    return None # or nothing if no match at all
 
 
 # this is for debugging via cli

@@ -21,6 +21,7 @@ ADDON_HANDLE = int(sys.argv[1])
 FANART = set_file_constant("fanart.jpg")
 ICON = set_file_constant("icon.png")
 PLAYER = xbmc.Player()
+ID = "plugin.audio.cbcradio"
 
 xbmcplugin.setPluginFanart(ADDON_HANDLE, FANART)
 xbmcplugin.setContent(ADDON_HANDLE, "audio")
@@ -95,7 +96,7 @@ def set_program_art(program):
 def news_break():
     xbmc.log(level=xbmc.LOGDEBUG, msg="plugin.audio.cbcradio: News break.")
     play_item = PLAYER.getPlayingItem()
-    play_item.setArt({'fanart': FANART})
+    play_item.setArt({'fanart': FANART, 'thumb': ICON})
     xbmc.log(level=xbmc.LOGDEBUG, msg="plugin.audio.cbcradio: Set 'fanart': FANART")
     tag = play_item.getMusicInfoTag()
     tag.setAlbum(None)
@@ -130,6 +131,7 @@ def initialize(key, location, url):
     play_item.setPath(url)
     play_item.setProperty('IsPlayable', 'true')
     play_item.addStreamInfo('audio', {'codec': 'aac', 'channels': 2})
+    play_item.setArt({'thumb': last_track.cover_url})
     if PLAYER.isPlaying():
         PLAYER.stop()
         chill(1)
@@ -182,6 +184,7 @@ def play_stream(key, location, url):
                 tag.setArtist(track.artist)
                 tag.setTitle(track.title)
                 tag.setComment(f"{program.title} with {program.host}")
+                play_item.setArt({'thumb': track.cover_url})
                 PLAYER.updateInfoTag(play_item)
                 # could not get this to work for v19
                 # if someone knows how to update currently playing
@@ -209,8 +212,6 @@ def play_stream(key, location, url):
                 tag.setComment(None)
                 PLAYER.updateInfoTag(play_item)
         chill(5)
-        if MONITOR.abortRequested():
-            abort()
         c += 1
         if not PLAYER.isPlaying():
             sys.exit(0)
