@@ -57,7 +57,10 @@ class Track:
 
 
 def get_json_api(url):
-    response = urllib.request.urlopen(url)
+    try:
+        response = urllib.request.urlopen(url)
+    except urllib.error.URLError:
+        return None
     return json.loads(response.read().decode('UTF-8'))
 
 
