@@ -225,9 +225,12 @@ def initialize(url):
 def play_stream(url):
     initialize(url)
     while not MONITOR.abortRequested():
-        if KEY == 2:
-            check_for_news()
-        update_play_item()
+        try:
+            if KEY == 2:
+                check_for_news()
+            update_play_item()
+        except Exception:
+            pass
         chill(5)
         if not PLAYER.isPlaying():
             sys.exit(0)

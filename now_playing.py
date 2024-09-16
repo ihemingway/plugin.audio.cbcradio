@@ -1,8 +1,8 @@
-import urllib.request
 import json
 import time
 import os
 import sys
+from urllib.request import Request, urlopen
 from datetime import datetime
 from dataclasses import dataclass
 import xbmc
@@ -57,19 +57,27 @@ class Track:
 
 
 def get_json_api(url):
+    #xbmc.log(level=xbmc.LOGINFO, msg=f"get_json_api({url})")
     try:
-        response = urllib.request.urlopen(url)
+        headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0'}
+        req = Request(url)
+        for k in headers:
+            req.add_header(k, headers[k])
+        response = urlopen(req)
     except urllib.error.URLError:
         return None
     return json.loads(response.read().decode('UTF-8'))
 
 
 def get_station_names():
+    #xbmc.log(level=xbmc.LOGINFO, msg=f"called get_station_names()")
     names = []
+    #xbmc.log(level=xbmc.LOGINFO, msg=f"{API_URL + LIVE_STATIONS}")
     j = get_json_api(API_URL + LIVE_STATIONS)
     stations = j['data']
     for station in stations:
         names.append(station['liveTitle'])
+    #xbmc.log(level=xbmc.LOGINFO, msg=f"returning get_station_names()")
     return names
 
 
@@ -150,8 +158,11 @@ def get_current_program(program_schedule):
 def get_playlog(program, location):
     now = datetime.now()
     playlog = []
-    playlog_url = f"https://www.cbc.ca/listen/api/v1/shows/{program.network_id}/{program.id}/playlogs/day/{now.strftime('%Y%m%d')}?withWebURL=true&locationKey={location}&xcountry=INT"
-    playlog = get_json_api(playlog_url)['data']['tracks']
+    try:
+        playlog_url = f"https://www.cbc.ca/listen/api/v1/shows/{program.network_id}/{program.id}/playlogs/day/{now.strftime('%Y%m%d')}?withWebURL=true&locationKey={location}&xcountry=INT"
+        playlog = get_json_api(playlog_url)['data']['tracks']
+    except:
+        return playlog
     if not playlog:
         xbmc.log(level=xbmc.LOGINFO, msg="plugin.audio.cbcradio: No playlog received from CBC.")
     return playlog
@@ -181,18 +192,25 @@ def get_current_track(playlog):
             )
     except TypeError:
         return Track(None, None, None, None)
-    
+
 
 def get_album_cover(artist, album):
+    artists = artist.split(',')
+    for art in artists:
+        try:
+            d = discogs_client.Client('plugin.audio.cbcradio/2.05', user_token=DISCOGS_TOKEN)
+            # search album/artist first. if we get a match, highly likely to be correct
+            results = d.search(album, artist=artist, type='release')
+            if results.count != 0:
+                break
+        except Exception:
+            return None
     try:
-        d = discogs_client.Client('plugin.audio.cbcradio/2.05', user_token=DISCOGS_TOKEN)
-        # search album/artist first. if we get a match, highly likely to be correct
-        results = d.search(album, artist=artist, type='release')
-    except json.decoder.JSONDecodeError:
-        return None
-    if results.count != 0:
-        xbmc.log(level=xbmc.LOGINFO, msg=f"plugin.audio.cbcradio: get_album_cover::found {results[0].images[0]['uri']}")
-        return results[0].images[0]['uri']
+        if results.count != 0:
+            xbmc.log(level=xbmc.LOGINFO, msg=f"plugin.audio.cbcradio: get_album_cover::found {results[0].images[0]['uri']}")
+            return results[0].images[0]['uri']
+    except:
+        pass
     # try searching album only if no result from album/artist
     #results = d.search(album, type='release')
     #if results.count != 0:
@@ -226,3 +244,4 @@ Album: {track.album}
             """)
     time.sleep(5)
 '''
+
